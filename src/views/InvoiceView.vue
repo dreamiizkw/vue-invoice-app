@@ -33,6 +33,7 @@
         >
           Mark as Pending
         </button>
+        <button @click="print" class="green">Print</button>
       </div>
     </div>
 
@@ -43,12 +44,6 @@
           <p><span>#</span>{{ currentInvoice.invoiceId }}</p>
           <p>{{ currentInvoice.productDescription }}</p>
         </div>
-        <div class="right flex flex-column">
-          <p>{{ currentInvoice.billerStreetAddress }}</p>
-          <p>{{ currentInvoice.billerCity }}</p>
-          <p>{{ currentInvoice.billerZipCode }}</p>
-          <p>{{ currentInvoice.billerCountry }}</p>
-        </div>
       </div>
       <div class="middle flex">
         <div class="payment flex flex-column">
@@ -56,21 +51,13 @@
           <p>
             {{ currentInvoice.invoiceDate }}
           </p>
-          <h4>Payment Date</h4>
-          <p>
-            {{ currentInvoice.paymentDueDate }}
-          </p>
         </div>
         <div class="bill flex flex-column">
           <h4>Bill To</h4>
           <p>{{ currentInvoice.clientName }}</p>
-          <p>{{ currentInvoice.clientStreetAddress }}</p>
-          <p>{{ currentInvoice.clientCity }}</p>
-          <p>{{ currentInvoice.clientZipCode }}</p>
-          <p>{{ currentInvoice.clientCountry }}</p>
         </div>
         <div class="send-to flex flex-column">
-          <h4>Sent To</h4>
+          <h4>Phone Number</h4>
           <p>{{ currentInvoice.clientEmail }}</p>
         </div>
       </div>
@@ -90,9 +77,77 @@
           </div>
         </div>
         <div class="total flex">
-          <p>Amount Due</p>
-          <p>{{ currentInvoice.invoiceTotal }}</p>
+          <p>Total Amount</p>
+          <p>{{ currentInvoice.invoiceTotal }}</p>&nbsp;Baht
         </div>
+      </div>
+    </div>
+
+    <!-- Invoice Print -->
+    <div class="invoice-details flex flex-column print-invoice" id="printMe">
+      <div class="top flex">
+        <div class="left flex flex-column">
+          <h1><p class="thai-font">ใบเสร็จรับเงิน</p></h1>
+          <p><span>#</span>{{ currentInvoice.invoiceId }}</p>
+        </div>
+      </div>
+      <div class="middle flex">
+        <div class="payment flex flex-column">
+          <h4><p class="thai-font">วันที่</p></h4>
+          <p>
+            {{ currentInvoice.invoiceDate }}
+          </p>
+        </div>
+        <div class="bill flex flex-column">
+          <h4><p class="thai-font">ชื่อ-นามสกุล</p></h4>
+          <p>{{ currentInvoice.clientName }}</p>
+        </div>
+        <div class="send-to flex flex-column">
+          <h4><p class="thai-font">เบอร์โทรศัพท์</p></h4>
+          <p>{{ currentInvoice.clientEmail }}</p>
+        </div>
+      </div>
+      <div class="bottom flex flex-column">
+        <div class="billing-items">
+          <div class="heading flex">
+            <div class="table table-header course-name"><p class="thai-font">คอร์สเรียน</p></div>
+            <div class="table table-header qty"><p class="thai-font">จำนวน</p></div>
+            <div class="table table-header price"><p class="thai-font">ราคา</p></div>
+            <div class="table table-header price"><p class="thai-font">จำนวนเงิน</p></div>
+          </div>
+          <div v-for="(item, index) in currentInvoice.invoiceItemList" :key="index" class="item flex">
+            <div class="table course-name"><p>{{ item.itemName }}</p></div>
+            <div class="table qty"><p>{{ item.qty }}</p></div>
+            <div class="table price"><p>{{ item.price }}</p></div>
+            <div class="table price"><p>{{ item.total }}</p></div>
+          </div>
+        </div>
+        <div class="total flex">
+          <div class="right flex flex-column">
+            <div class="heading flex">
+              <div class="total-row"><p>ยอดรวม</p></div>
+              <div class="total-row"><p>{{ currentInvoice.invoiceTotal }}</p></div>
+            </div>
+            <div class="heading flex">
+              <div class="total-row"><p>ส่วนลด</p></div>
+              <div class="total-row"><p>0</p></div>
+            </div>
+             <div class="heading flex">
+              <div class="total-row"><p>ยอดรวมหลังหักส่วนลด</p></div>
+              <div class="total-row"><p>{{ currentInvoice.invoiceTotal }}</p></div>
+            </div>
+            <div class="heading flex">
+              <div class="total-row"><p>ภาษีมูลค่าเพิ่ม (7%)</p></div>
+              <div class="total-row"><p>0</p></div>
+            </div>
+            <div class="heading flex total-amount">
+              <div class="total-row"><p>ยอดสุทธิ</p></div>
+              <div class="total-row"><p>{{ currentInvoice.invoiceTotal }}</p></div>
+            </div>
+          </div>
+        </div>
+
+
       </div>
     </div>
   </div>
@@ -137,6 +192,107 @@ export default {
     updateStatusToPending(docId) {
       this.UPDATE_STATUS_TO_PENDING(docId);
     },
+
+    print() {
+      var prtContent = document.getElementById("printMe");
+      // Get all stylesheets HTML
+      let stylesHtml = '';
+      for (const node of [...document.querySelectorAll('link[rel="stylesheet"], style')]) {
+        stylesHtml += node.outerHTML;
+      }
+
+      var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+
+      WinPrint.document.write(`<!DOCTYPE html>
+      <html>
+        <head>
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Prompt&display=swap');
+          </style>
+          <style type="text/css">
+            body {
+              padding: 30px;
+            }
+            .left.flex.flex-column {
+              justify-content: flex-start;
+              margin-right: auto;
+            }
+            .right.flex.flex-column {
+              width: 360px;
+              justify-content: flex-end;
+              margin-left: auto;
+            }
+            .top.flex {
+                margin-bottom: 40px;
+            }
+            .middle.flex {
+                margin: 40px 0;
+            }
+            .bottom.flex {
+                margin-top: 40px;
+            }
+            .payment.flex.flex-column {
+                justify-content: flex-start;
+                margin-right: auto;
+            }
+            .send-to.flex.flex-column {
+              justify-content: flex-end;
+              margin-left: auto;
+            }
+            .table {
+              display: block;
+              flex-grow: 1;
+              flex-shrink: 1;
+              padding: 0.75rem;
+              border: 1px solid;
+              font-size: 12px;
+            }
+            .table-header {
+              background: lightgray
+            }
+            .billing-items {
+              border: 1px solid;
+            }
+            .total.flex {
+                margin-top: 40px;
+            }
+            .total-row {
+              display: block;
+              flex-basis: 0;
+              flex-grow: 1;
+              flex-shrink: 1;
+              padding: 0.75rem;
+              min-width: fit-content;
+              text-align: right;
+            }
+            .total-amount {
+              margin: 20px 0;
+              border-top: 1px solid;
+              border-bottom: 1px solid;
+            }
+            .thai-font {}
+            .course-name {
+              width: 60%;
+            }
+            .price {
+              width: 15%;
+            }
+            .qty {
+              width: 10%;
+            }
+          </style>
+          ${stylesHtml}
+        </head>
+        <body>
+          ${prtContent.innerHTML}
+        </body>
+      </html>`);
+
+      WinPrint.document.close();
+      WinPrint.focus();
+      WinPrint.print();
+      WinPrint.close();
+    }
   },
   computed: {
     ...mapState(["currentInvoiceArray", "editInvoice"]),
@@ -152,6 +308,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.print-invoice {
+  display: none;
+}
 .invoice-view {
   .nav-link {
     margin-bottom: 32px;
