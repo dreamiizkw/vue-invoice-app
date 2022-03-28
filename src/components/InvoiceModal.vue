@@ -123,10 +123,27 @@
 </template>
 
 <script>
-import db from "../firebase/firebaseInit";
 import Loading from "../components/Loading";
 import { mapActions, mapMutations, mapState } from "vuex";
 import { uid } from "uid";
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBmEpQ8bG6nsUHI2jbW_LCEgp3lNrhutr8",
+  authDomain: "bbd-invoice.firebaseapp.com",
+  projectId: "bbd-invoice",
+  storageBucket: "bbd-invoice.appspot.com",
+  messagingSenderId: "696098333984",
+  appId: "1:696098333984:web:d791249762fa130d17a345",
+  measurementId: "G-EGV0517QGL"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 export default {
   name: "invoiceModal",
   data() {
@@ -248,9 +265,8 @@ export default {
 
       this.calInvoiceTotal();
 
-      const dataBase = db.collection("invoices").doc();
-
-      await dataBase.set({
+      // Add a new document with a generated id.
+      await addDoc(collection(db, "invoices"), {
         invoiceId: uid(6),
         billerStreetAddress: this.billerStreetAddress,
         billerCity: this.billerCity,
@@ -292,9 +308,8 @@ export default {
 
       this.calInvoiceTotal();
 
-      const dataBase = db.collection("invoices").doc(this.docId);
-
-      await dataBase.update({
+      const docRef = doc(db, "invoices", this.docId);
+      await updateDoc(docRef, {
         billerStreetAddress: this.billerStreetAddress,
         billerCity: this.billerCity,
         billerZipCode: this.billerZipCode,

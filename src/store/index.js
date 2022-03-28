@@ -1,5 +1,21 @@
 import { createStore } from "vuex";
-import db from "../firebase/firebaseInit";
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import { getDocs, collection, doc, deleteDoc, updateDoc } from "firebase/firestore";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBmEpQ8bG6nsUHI2jbW_LCEgp3lNrhutr8",
+  authDomain: "bbd-invoice.firebaseapp.com",
+  projectId: "bbd-invoice",
+  storageBucket: "bbd-invoice.appspot.com",
+  messagingSenderId: "696098333984",
+  appId: "1:696098333984:web:d791249762fa130d17a345",
+  measurementId: "G-EGV0517QGL"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 export default createStore({
   state: {
@@ -54,8 +70,7 @@ export default createStore({
   },
   actions: {
     async GET_INVOICES({ commit, state }) {
-      const getData = db.collection("invoices");
-      const results = await getData.get();
+      const results = await getDocs(collection(db, "invoices"));
       results.forEach((doc) => {
         if (!state.invoiceData.some((invoice) => invoice.docId === doc.id)) {
           const data = {
@@ -96,21 +111,21 @@ export default createStore({
       commit("SET_CURRENT_INVOICE", routeId);
     },
     async DELETE_INVOICE({ commit }, docId) {
-      const getInvoice = db.collection("invoices").doc(docId);
-      await getInvoice.delete();
+      await deleteDoc(doc(db, "invoices", docId));
       commit("DELETE_INVOICE", docId);
     },
     async UPDATE_STATUS_TO_PAID({ commit }, docId) {
-      const getInvoice = db.collection("invoices").doc(docId);
-      await getInvoice.update({
+      const docRef = doc(db, "invoices", docId);
+      await updateDoc(docRef,{
         invoicePaid: true,
         invoicePending: false,
       });
+
       commit("UPDATE_STATUS_TO_PAID", docId);
     },
     async UPDATE_STATUS_TO_PENDING({ commit }, docId) {
-      const getInvoice = db.collection("invoices").doc(docId);
-      await getInvoice.update({
+      const docRef = doc(db, "invoices", docId);
+      await updateDoc(docRef,{
         invoicePaid: false,
         invoicePending: true,
         invoiceDraft: false,
