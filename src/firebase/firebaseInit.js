@@ -1,15 +1,16 @@
-import firebase from "firebase/app";
-import "firebase/firestore";
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 
-var firebaseConfig = {
-  apiKey: "AIzaSyBtX0zbq8OWFoczz-D55IEQ-zQxcmjZ6BU",
-  authDomain: "invoice-app-yt.firebaseapp.com",
-  projectId: "invoice-app-yt",
-  storageBucket: "invoice-app-yt.appspot.com",
-  messagingSenderId: "638958069840",
-  appId: "1:638958069840:web:2a359ba0cf4b8c7b648955",
-};
+initializeApp({
+  apiKey: "AIzaSyBmEpQ8bG6nsUHI2jbW_LCEgp3lNrhutr8",
+  authDomain: "bbd-invoice.firebaseapp.com",
+  projectId: "bbd-invoice",
+  storageBucket: "bbd-invoice.appspot.com",
+  messagingSenderId: "696098333984",
+  appId: "1:696098333984:web:d791249762fa130d17a345",
+  measurementId: "G-EGV0517QGL"
+});
 
-const firebaseApp = firebase.initializeApp(firebaseConfig);
+const db = getFirestore();
 
-export default firebaseApp.firestore();
+export default db
