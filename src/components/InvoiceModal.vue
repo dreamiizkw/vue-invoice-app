@@ -5,7 +5,7 @@
       <h1 v-if="!editInvoice">New Invoice</h1>
       <h1 v-else>Edit Invoice</h1>
 
-      <!-- Bill From -->
+      <!-- Bill From
       <div class="bill-from flex flex-column">
         <h4>Bill From</h4>
         <div class="input flex flex-column">
@@ -26,20 +26,20 @@
             <input required type="text" id="billerCountry" v-model="billerCountry" />
           </div>
         </div>
-      </div>
+      </div> -->
 
-      <!-- Bill To -->
+      <!-- Customer Detail -->
       <div class="bill-to flex flex-column">
-        <h4>Bill To</h4>
+        <h4>ข้อมูลนักเรียน</h4>
         <div class="input flex flex-column">
-          <label for="clientName">Client's Name</label>
+          <label for="clientName">ชื่อ - นามสกุล</label>
           <input required type="text" id="clientName" v-model="clientName" />
         </div>
         <div class="input flex flex-column">
-          <label for="clientEmail">Client's Email</label>
+          <label for="clientEmail">เบอร์โทรศัพท์</label>
           <input required type="text" id="clientEmail" v-model="clientEmail" />
         </div>
-        <div class="input flex flex-column">
+        <!-- <div class="input flex flex-column">
           <label for="clientStreetAddress">Street Address</label>
           <input required type="text" id="clientStreetAddress" v-model="clientStreetAddress" />
         </div>
@@ -56,21 +56,22 @@
             <label for="clientCountry">Country</label>
             <input required type="text" id="clientCountry" v-model="clientCountry" />
           </div>
-        </div>
-      </div>
+        </div> -->
+      </div> 
 
       <!-- Invoice Work Details -->
       <div class="invoice-work flex flex-column">
         <div class="payment flex">
           <div class="input flex flex-column">
-            <label for="invoiceDate">Invoice Date</label>
+            <label for="invoiceDate">วันที่ออกบิล</label>
             <input disabled type="text" id="invoiceDate" v-model="invoiceDate" />
           </div>
-          <div class="input flex flex-column">
+          <!-- <div class="input flex flex-column">
             <label for="paymentDueDate">Payment Due</label>
             <input disabled type="text" id="paymentDueDate" v-model="paymentDueDate" />
-          </div>
+          </div> -->
         </div>
+        <!--
         <div class="input flex flex-column">
           <label for="paymentTerms">Payment Terms</label>
           <select required type="text" id="paymentTerms" v-model="paymentTerms">
@@ -82,14 +83,15 @@
           <label for="productDescription">Product Description</label>
           <input required type="text" id="productDescription" v-model="productDescription" />
         </div>
+        -->
         <div class="work-items">
-          <h3>Item List</h3>
+          <h3>คอร์สที่สมัครเรียน</h3>
           <table class="item-list">
             <tr class="table-heading flex">
-              <th class="item-name">Item Name</th>
-              <th class="qty">Qty</th>
-              <th class="price">Price</th>
-              <th class="total">Toal</th>
+              <th class="item-name">ชื่อคอร์สเรียน</th>
+              <th class="qty">จำนวน</th>
+              <th class="price">ราคา</th>
+              <th class="total">รวมเป็นเงิน</th>
             </tr>
             <tr class="table-items flex" v-for="(item, index) in invoiceItemList" :key="index">
               <td class="item-name"><input type="text" v-model="item.itemName" /></td>
@@ -281,8 +283,8 @@ export default {
         invoiceDate: this.invoiceDate,
         invoiceDateUnix: this.invoiceDateUnix,
         paymentTerms: this.paymentTerms,
-        paymentDueDate: this.paymentDueDate,
-        paymentDueDateUnix: this.paymentDueDateUnix,
+        paymentDueDate: this.invoiceDate,
+        paymentDueDateUnix: this.invoiceDateUnix,
         productDescription: this.productDescription,
         invoiceItemList: this.invoiceItemList,
         invoiceTotal: this.invoiceTotal,

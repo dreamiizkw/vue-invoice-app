@@ -3,6 +3,9 @@
     <div class="branding flex">
       <img src="@/assets/file-invoice-dollar-solid.png" alt="" />
     </div>
+    <div class="branding flex">
+      <a href=""><img src="@/assets/book-solid.svg" alt="" /></a>
+    </div>
   </header>
 </template>
 

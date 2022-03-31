@@ -73,7 +73,7 @@ export default {
   },
   computed: {
     ...mapState(["invoiceData"]),
-
+    
     filteredData() {
       return this.invoiceData.filter((invoice) => {
         if (this.filteredInvoice === "Draft") {
